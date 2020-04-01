@@ -1,0 +1,1 @@
+curl -i -H "Content-Type:application/json" -X POST -d '{"job_class":"com.cqx.myjob.jobcomponent.impl.ShareFileJob","job_id":"10050","job_name":"ShareFileJob","job_param":{}}' http://10.1.8.203:10091/jobservice/job/submit/
