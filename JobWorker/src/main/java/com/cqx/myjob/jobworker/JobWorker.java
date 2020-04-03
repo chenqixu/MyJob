@@ -37,10 +37,10 @@ public class JobWorker {
                     Class cls = Class.forName(jobBean.getJob_class());
                     iJob = (IJob) cls.newInstance();
                 } catch (ClassNotFoundException e) {
-                    logger.error(String.format("==【%s】==：找不到类，异常信息：%s",
+                    logger.error(String.format("==%s【找不到类】，异常信息：%s",
                             jobBean.getJob_name(), e.getMessage()), e);
                 } catch (IllegalAccessException | InstantiationException e) {
-                    logger.error(String.format("==【%s】==：反射异常，异常信息：%s",
+                    logger.error(String.format("==%s【反射异常】，异常信息：%s",
                             jobBean.getJob_name(), e.getMessage()), e);
                 }
                 if (iJob != null) {
@@ -52,21 +52,21 @@ public class JobWorker {
 //                    fileAppender.activateOptions();
                     try {
                         //初始化
-                        logger.info(String.format("==【%s】==：初始化", jobBean.getJob_name()));
+                        logger.info(String.format("==%s【初始化】", jobBean.getJob_name()));
                         //参数打印
                         for (Map.Entry<String, String> entry : jobBean.getJob_param().entrySet()) {
-                            logger.info(String.format("==【%s】==：参数打印，key：%s，value：%s",
+                            logger.info(String.format("==%s【参数打印】，key：%s，value：%s",
                                     jobBean.getJob_name(), entry.getKey(), entry.getValue()));
                         }
                         iJob.init(jobBean.getJob_param());
                         //运行
-                        logger.info(String.format("==【%s】==：运行", jobBean.getJob_name()));
+                        logger.info(String.format("==%s【运行】", jobBean.getJob_name()));
                         iJob.run();
-                        logger.info(String.format("==【%s】==：资源释放", jobBean.getJob_name()));
+                        logger.info(String.format("==%s【资源释放】", jobBean.getJob_name()));
                         //资源释放
                         iJob.release();
                     } catch (Throwable e) {
-                        logger.error(String.format("==【%s】==：运行异常，%s",
+                        logger.error(String.format("==%s【运行异常】，异常信息：%s",
                                 jobBean.getJob_name(), e.getMessage()), e);
                     }
                 }

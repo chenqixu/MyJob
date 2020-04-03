@@ -16,7 +16,7 @@
         <File>${LOG_PATH}/JobService.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <FileNamePattern>JobService.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>${LOG_PATH}/JobService.%d{yyyy-MM-dd}.log</FileNamePattern>
             <!-- keep 3 days' worth of history -->
             <maxHistory>3</maxHistory>
         </rollingPolicy>

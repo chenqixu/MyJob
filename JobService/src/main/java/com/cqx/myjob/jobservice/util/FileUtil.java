@@ -19,9 +19,8 @@ public class FileUtil {
         File file = new File(filePath);
         if (file.exists() && file.isDirectory()) {
             return file.listFiles(pathname -> {
-                if (endWith != null || endWith.length() > 0) {
-                    if (pathname.getPath().endsWith(endWith)) return true;
-                    else return false;
+                if (endWith != null && endWith.length() > 0) {
+                    return pathname.getPath().endsWith(endWith);
                 } else {
                     return true;
                 }
