@@ -65,8 +65,10 @@ public class HttpClientTest {
         param = new HashMap<>();
         param.put("hadoop_conf", "/cmss/bch/bc/hadoop/etc/hadoop75/");
         param.put("scan_path", "/cqz/mccdr/sum_date=20200326");
-        param.put("local_path", "/bi/user/cqx/data/mccdr/135.raf");
+//        param.put("local_path", "/bi/user/cqx/data/mccdr/135.raf");
         param.put("cnt", "100");
+        param.put("local_index_path", "/bi/user/cqx/data/mccdr/local.index");
+        param.put("local_map_read_path", "/bi/user/cqx/data/mccdr/local.read.map");
         jobBean.setJob_param(param);
         System.out.println(jobBean.toString());
 
@@ -78,7 +80,10 @@ public class HttpClientTest {
         param.put("hadoop_conf", "/cmss/bch/bc/hadoop/etc/hadoop75/");
         param.put("scan_path", "/cqz/mccdr/sum_date=20200326");
         param.put("local_raf_path", "/bi/user/cqx/data/mccdr/local.raf");
-        param.put("local_map_path", "/bi/user/cqx/data/mccdr/local.map");
+        param.put("local_map_read_path", "/bi/user/cqx/data/mccdr/local.read.map");
+        param.put("local_map_write_path", "/bi/user/cqx/data/mccdr/local.write.map");
+        param.put("deal_cnt", "2");
+        param.put("local_index_path", "/bi/user/cqx/data/mccdr/local.index");
         jobBean.setJob_param(param);
         System.out.println(jobBean.toString());
 

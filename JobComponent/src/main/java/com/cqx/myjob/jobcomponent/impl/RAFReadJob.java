@@ -1,6 +1,5 @@
 package com.cqx.myjob.jobcomponent.impl;
 
-import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.hdfs.HdfsBean;
 import com.cqx.common.utils.hdfs.HdfsTool;
 import com.cqx.common.utils.system.TimeCostUtil;
@@ -25,9 +24,10 @@ import java.util.Map;
 public class RAFReadJob extends BaseJob {
 
     private static final Logger logger = LoggerFactory.getLogger(RAFReadJob.class);
-    private MyRandomAccessFile myRandomAccessFile;
+    //    private MyRandomAccessFile myRandomAccessFile;
     private HdfsTool hdfsTool;
     private RAFReadBean rafReadBean;
+    private ModRAFRead modRAFRead = new ModRAFRead();
 
     @Override
     public void init(Map<String, String> param) throws Throwable {
@@ -35,7 +35,9 @@ public class RAFReadJob extends BaseJob {
         rafReadBean = setValueByMap(param, RAFReadBean.class, logger);
         HdfsBean hdfsBean = new HdfsBean();
         hdfsTool = new HdfsTool(rafReadBean.getHadoop_conf(), hdfsBean);
-        myRandomAccessFile = new MyRandomAccessFile(rafReadBean.getLocal_path());
+//        myRandomAccessFile = new MyRandomAccessFile(rafReadBean.getLocal_path());
+        //初始化索引
+        modRAFRead.init(rafReadBean);
         logger.info("==步骤【0】：完成初始化参数");
     }
 
@@ -45,7 +47,7 @@ public class RAFReadJob extends BaseJob {
             TimeCostUtil timeCostUtil = new TimeCostUtil();
             InputStream is = null;
             BufferedReader br = null;
-            int cnt = 0;
+//            int cnt = 0;
             Map<String, String> readMap = new HashMap<>();
             Map<String, String> rafMap = new HashMap<>();
             List<String> msisdnList = new ArrayList<>();
@@ -84,11 +86,12 @@ public class RAFReadJob extends BaseJob {
             //开始测试RAF
             timeCostUtil.start();
             for (String msisdn : msisdnList) {
-                String msisdn_index = msisdn.substring(3);
-                //计算位置
-                long pos = (Long.valueOf(msisdn_index) + 1) * 15;
-                String imsi = myRandomAccessFile.read(pos, 15);
+//                String msisdn_index = msisdn.substring(3);
+//                //计算位置
+//                long pos = (Long.valueOf(msisdn_index) + 1) * 15;
+//                String imsi = myRandomAccessFile.read(pos, 15);
 //                rafMap.put(msisdn, imsi);
+                String imsi = modRAFRead.getValue(msisdn);
                 logger.debug("==步骤【1】：RAF，msisdn：{}，imsi：{}", msisdn, imsi);
             }
             timeCostUtil.end();
@@ -117,8 +120,11 @@ public class RAFReadJob extends BaseJob {
         if (hdfsTool != null) {
             hdfsTool.closeFileSystem();
         }
-        if (myRandomAccessFile != null) {
-            myRandomAccessFile.close();
+//        if (myRandomAccessFile != null) {
+//            myRandomAccessFile.close();
+//        }
+        if (modRAFRead != null) {
+            modRAFRead.release();
         }
     }
 }
