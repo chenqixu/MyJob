@@ -20,9 +20,14 @@ public class JobWorker {
      * 日志变量从外部加载
      * -Dcurrent_date=20200401 -Djob_id=10051
      */
-    private static final Logger logger = LoggerFactory.getLogger(JobWorker.class);
+//    private static final Logger logger = LoggerFactory.getLogger(JobWorker.class);
 
     public static void main(String[] args) {
+        //日志变量从外部加载，使用-Dcurrent_date=20200401 -Djob_id=10051
+        //实际上这个时候这个是设置到System.Property中
+        System.setProperty("current_date", "20200401");
+        System.setProperty("job_id", "10052");
+        Logger logger = LoggerFactory.getLogger(JobWorker.class);
         if (args.length == 1) {
             JobBean jobBean = null;
             IJob iJob = null;
