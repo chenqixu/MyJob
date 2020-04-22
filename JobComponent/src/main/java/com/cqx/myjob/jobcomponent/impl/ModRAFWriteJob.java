@@ -33,7 +33,7 @@ public class ModRAFWriteJob extends BaseJob {
     private static final String LINE = "\r\n";
     private ModRAFWriteBean modRAFWriteBean;
     private HdfsTool hdfsTool;
-
+    private int threadNum = 0;//并行
     private List<MyRandomAccessFile> myRandomAccessFileList;
 
     @Override
@@ -81,7 +81,7 @@ public class ModRAFWriteJob extends BaseJob {
                     count("read");
                 }
             };
-            readHdfs(path, fileCount, 0);
+            readHdfs(path, fileCount, threadNum);
             cnt = fileCount.getCount("read");
             tmp_all_cnt += cnt;
             timeCostUtil.end();
@@ -107,7 +107,7 @@ public class ModRAFWriteJob extends BaseJob {
         for (String path : fileList) {
             timeCostUtil.start();
             FileCount fileCount = dealContent(all_cnt, myRandomAccessFileList.get(0), fileWriterUtil);
-            readHdfs(path, fileCount, 5);
+            readHdfs(path, fileCount, threadNum);
             long raf_cnt = fileCount.getCount("raf_cnt");
             long map_cnt = fileCount.getCount("map_cnt");
             map_file_cnt += map_cnt;
@@ -196,7 +196,8 @@ public class ModRAFWriteJob extends BaseJob {
             FileUtil fileLocalUtil = new FileUtil();
             try {
                 fileLocalUtil.setReader(path);
-                fileLocalUtil.read(iFileRead, 5);
+                if (threadNum > 0) fileLocalUtil.read(iFileRead, threadNum);
+                else fileLocalUtil.read(iFileRead);
             } finally {
                 fileLocalUtil.closeRead();
             }
@@ -225,12 +226,20 @@ public class ModRAFWriteJob extends BaseJob {
                     //计算下位置，从raf读值
                     long pos = (mod + 1) * 15;
                     String read_imsi = myRandomAccessFile.read(pos, 15);
+                    boolean isToMap = false;
                     if (read_imsi.equals(NULL_VALUE)) {//没有从raf取到数据
                         //写入raf
-                        myRandomAccessFile.write(pos, imsi);
-                        count("raf_cnt");
+                        if (myRandomAccessFile.write(pos, imsi)) {
+                            //计数
+                            count("raf_cnt");
+                        } else {
+                            isToMap = true;
+                        }
                     } else {//有从raf取到数据
-                        //写到map文件
+                        isToMap = true;
+                    }
+                    //写到map文件
+                    if (isToMap) {
                         count("map_cnt");
                         String _tmp = imsi + SP + msisdn + LINE;
                         fileUtil.write(_tmp);
