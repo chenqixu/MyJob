@@ -5,36 +5,31 @@ import com.cqx.common.utils.file.FileUtil;
 import com.cqx.common.utils.hdfs.HdfsBean;
 import com.cqx.common.utils.hdfs.HdfsTool;
 import com.cqx.common.utils.system.TimeCostUtil;
-import com.cqx.myjob.jobcomponent.BaseJob;
-import com.cqx.myjob.jobcomponent.bean.ShareFileBean;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+public class ModRAFWriteJobTest {
+    private static final Logger logger = LoggerFactory.getLogger(ModRAFWriteJobTest.class);
 
-/**
- * TestJob
- *
- * @author chenqixu
- */
-public class TestJob extends BaseJob {
-
-    private static final Logger logger = LoggerFactory.getLogger(TestJob.class);
-    private ShareFileBean shareFileBean;
-
-    @Override
-    public void init(Map<String, String> param) throws Throwable {
-        shareFileBean = setValueByMap(param, ShareFileBean.class, logger);
+    @Before
+    public void setUp() throws Exception {
     }
 
-    @Override
-    public void run() throws Throwable {
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void run() throws Exception {
         TimeCostUtil timeCostUtil = new TimeCostUtil();
         HdfsTool hdfsTool = null;
         FileUtil fileUtil = new FileUtil();
         try {
-            hdfsTool = new HdfsTool(shareFileBean.getHadoop_conf(), new HdfsBean());
-            fileUtil.setReader(hdfsTool.openFile(shareFileBean.getScan_path()));
+            hdfsTool = new HdfsTool("d:\\tmp\\etc\\hadoop\\conf75\\", new HdfsBean());
+            fileUtil.setReader(hdfsTool.openFile("/cqx/data/hbidc/000000_0"));
             FileCount fileCount = new FileCount() {
                 @Override
                 public void run(String s) {
@@ -49,10 +44,5 @@ public class TestJob extends BaseJob {
             if (hdfsTool != null) hdfsTool.closeFileSystem();
             fileUtil.closeRead();
         }
-    }
-
-    @Override
-    public void release() throws Throwable {
-
     }
 }
