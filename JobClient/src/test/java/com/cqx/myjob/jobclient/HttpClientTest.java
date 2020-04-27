@@ -97,6 +97,26 @@ public class HttpClientTest {
         jobBean.setJob_param(param);
         System.out.println(jobBean.toString());
 
+        //10056
+        jobBean.setJob_id("10056");
+        jobBean.setJob_name("SplitPackageJob");
+        jobBean.setJob_class("com.cqx.myjob.jobcomponent.impl.SplitPackageJob");
+        param = new HashMap<>();
+        param.put("local_bak_path", "/bi/user/cqx/data/hblog/if_upload_hb_netlog/${run_date}/");
+        param.put("extension", "01-${device_id}-${seq}-${file_start_time}-${file_end_time}-${record_count}-${md5}-${file_size}.txt.gz");
+        param.put("max_line", "10000");
+        param.put("hadoop_conf", "/cmss/bch/bc/hadoop/etc/hadoop75/");
+        param.put("hdfs_file_path", "/cqx/data/hbidc/000000_0");
+        param.put("zookeeper", "10.1.4.186:2183");
+        param.put("seq_zk_path", "/computecenter/task_context/if_upload_iptrace_jitian/infoId");
+        param.put("host", "10.1.8.204");
+        param.put("port", "22");
+        param.put("user", "edc_base");
+        param.put("password", "fLyxp1s*");
+        param.put("remote_path", "/bi/user/cqx/data/hblog/");
+        jobBean.setJob_param(param);
+        System.out.println(jobBean.toString());
+
 //        String result = httpClient.doPost(url, data);
 //        System.out.println(result);
     }

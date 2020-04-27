@@ -16,10 +16,16 @@ public class LogThread extends Thread {
     private InputStream is;
     private StringBuffer threadlog = new StringBuffer();
     private String type;
+    private boolean isNeedPrintLog;
 
     public LogThread(InputStream is, String type) {
+        this(is, type, true);
+    }
+
+    public LogThread(InputStream is, String type, boolean isNeedPrintLog) {
         this.is = is;
         this.type = type;
+        this.isNeedPrintLog = isNeedPrintLog;
     }
 
     public void run() {
@@ -30,12 +36,14 @@ public class LogThread extends Thread {
             br = new BufferedReader(isr, 1024);
             String line;
             while ((line = br.readLine()) != null) {
-                if (type.equals("err")) {
-                    logger.info("##错误日志##" + line);
-                    threadlog.append(line).append(separator);
-                } else {
-                    logger.info("##内容##" + line);
-                    threadlog.append(line).append(separator);
+                if (isNeedPrintLog) {
+                    if (type.equals("err")) {
+                        logger.info("##错误日志##" + line);
+                        threadlog.append(line).append(separator);
+                    } else {
+                        logger.info("##内容##" + line);
+                        threadlog.append(line).append(separator);
+                    }
                 }
             }
         } catch (IOException ioe) {

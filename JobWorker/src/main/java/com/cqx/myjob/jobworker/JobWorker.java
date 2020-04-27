@@ -3,11 +3,10 @@ package com.cqx.myjob.jobworker;
 import com.alibaba.fastjson.JSON;
 import com.cqx.myjob.jobcomponent.IJob;
 import com.cqx.myjob.jobcomponent.bean.JobBean;
+import com.cqx.myjob.jobcomponent.util.ParamFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -21,12 +20,11 @@ public class JobWorker {
      * -Dcurrent_date=20200401 -Djob_id=10051
      */
 //    private static final Logger logger = LoggerFactory.getLogger(JobWorker.class);
-
     public static void main(String[] args) {
         //日志变量从外部加载，使用-Dcurrent_date=20200401 -Djob_id=10051
         //实际上这个时候这个是设置到System.Property中
-        System.setProperty("current_date", "20200401");
-        System.setProperty("job_id", "10052");
+//        System.setProperty("current_date", "20200401");
+//        System.setProperty("job_id", "10052");
         Logger logger = LoggerFactory.getLogger(JobWorker.class);
         if (args.length == 1) {
             JobBean jobBean = null;
@@ -58,8 +56,11 @@ public class JobWorker {
                     try {
                         //初始化
                         logger.info(String.format("==%s【初始化】", jobBean.getJob_name()));
+                        //参数处理
+                        Map<String, String> param = jobBean.getJob_param();
+                        ParamFormat.builder().format(param);
                         //参数打印
-                        for (Map.Entry<String, String> entry : jobBean.getJob_param().entrySet()) {
+                        for (Map.Entry<String, String> entry : param.entrySet()) {
                             logger.info(String.format("==%s【参数打印】，key：%s，value：%s",
                                     jobBean.getJob_name(), entry.getKey(), entry.getValue()));
                         }
@@ -79,10 +80,5 @@ public class JobWorker {
         } else {
             logger.error("传入的参数个数不正确！");
         }
-    }
-
-    private static String getDate(String format) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-        return simpleDateFormat.format(new Date());
     }
 }

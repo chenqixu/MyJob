@@ -49,11 +49,11 @@ public class JobServer {
         JobBean jobBean = JSON.parseObject(param, JobBean.class);
         //传入的json替换{和}，还有引号
         param = param.replaceAll("\\{", "\\\\{");
-        param = param.replaceAll("\\}", "\\\\}");
+        param = param.replaceAll("}", "\\\\}");
         param = param.replaceAll("\"", "\\\\\"");
         int job_id = Integer.valueOf(jobBean.getJob_id());
         String[] cmd = {"/bin/sh", "-c", "sh job.sh " + param + " " + job_id};
-        ExecShell execShell = ExecShell.builder();
+        ExecShell execShell = ExecShell.builder(false, job_id);
         int resultcode = execShell.run(cmd, submit_path);
         AgentResultBuilder(resultcode, execShell);
         return job_id;
