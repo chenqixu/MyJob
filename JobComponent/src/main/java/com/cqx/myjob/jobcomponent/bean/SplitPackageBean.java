@@ -33,6 +33,8 @@ public class SplitPackageBean extends BaseBean {
     private String password;
     @BeanDesc(value = "远程路径")
     private String remote_path;
+    @BeanDesc(value = "SFTP上传并发数")
+    private Integer sftp_parallel_num;
 
     public String getLocal_bak_path() {
         return local_bak_path;
@@ -128,5 +130,13 @@ public class SplitPackageBean extends BaseBean {
 
     public void setRemote_path(String remote_path) {
         this.remote_path = remote_path;
+    }
+
+    public Integer getSftp_parallel_num() {
+        return sftp_parallel_num;
+    }
+
+    public void setSftp_parallel_num(Integer sftp_parallel_num) {
+        this.sftp_parallel_num = sftp_parallel_num;
     }
 }

@@ -114,6 +114,28 @@ public class HttpClientTest {
         param.put("user", "edc_base");
         param.put("password", "fLyxp1s*");
         param.put("remote_path", "/bi/user/cqx/data/hblog/");
+        param.put("sftp_parallel_num", "10");
+        jobBean.setJob_param(param);
+        System.out.println(jobBean.toString());
+
+        //生产10057
+        jobBean.setJob_id("10057");
+        jobBean.setJob_name("SplitPackageJob");
+        jobBean.setJob_class("com.cqx.myjob.jobcomponent.impl.SplitPackageJob");
+        param = new HashMap<>();
+        param.put("local_bak_path", "/bi/databackup/if_upload_hb_netlog/${run_date}/");
+        param.put("extension", "01-${device_id}-${seq}-${file_start_time}-${file_end_time}-${record_count}-${md5}-${file_size}.txt.gz");
+        param.put("max_line", "10000");
+        param.put("hadoop_conf", "/cmss/bch/bc1.3.6/hadoop/etc/hadoop/retnhd.conf/");
+        param.put("hdfs_file_path", "hdfs://fjedcretnhd/user/bdoc/20/services/hdfs/17/yz/bigdata/if_upload_hb_netlog/202005200000/nat/000000_0");
+        param.put("zookeeper", "10.47.217.179:2185");
+        param.put("seq_zk_path", "/computecenter/task_context/if_upload_hb_netlog/infoId");
+        param.put("host", "10.48.152.7");
+        param.put("port", "31247");
+        param.put("user", "FJRZSB001");
+        param.put("password", "Jt!@34");
+        param.put("remote_path", "/data/IF_UPLOAD_BOSS/HOME_Log_Server/FJ/YDFJQ00003/");
+        param.put("sftp_parallel_num", "40");
         jobBean.setJob_param(param);
         System.out.println(jobBean.toString());
 

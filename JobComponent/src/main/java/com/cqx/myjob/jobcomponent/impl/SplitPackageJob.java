@@ -8,6 +8,7 @@ import com.cqx.common.utils.hdfs.HdfsTool;
 import com.cqx.common.utils.sftp.SftpConnection;
 import com.cqx.common.utils.sftp.SftpUtil;
 import com.cqx.common.utils.system.TimeCostUtil;
+import com.cqx.common.utils.thread.ThreadTool;
 import com.cqx.common.utils.zookeeper.ZookeeperTools;
 import com.cqx.myjob.jobcomponent.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.SplitPackageBean;
@@ -54,13 +55,29 @@ public class SplitPackageJob extends BaseJob {
 
     @Override
     public void run() throws Throwable {
+        hdfsTool = new HdfsTool(splitPackageBean.getHadoop_conf(), new HdfsBean());
+        //扫描
+        for (String path : hdfsTool.lsPath(splitPackageBean.getHdfs_file_path())) {
+            logger.info("scan hdfs：{}", path);
+            //分割打包上传
+            splitAndSend(path);
+        }
+    }
+
+    @Override
+    public void release() throws Throwable {
+        if (sftpConnection != null) SftpUtil.closeSftpConnection(sftpConnection);
+        if (zookeeperTools != null) zookeeperTools.close();
+        if (hdfsTool != null) hdfsTool.closeFileSystem();
+    }
+
+    private void splitAndSend(String hdfs_file_path) throws Throwable {
         TimeCostUtil timeCostUtil = new TimeCostUtil();
         FileUtil fileUtil = new FileUtil();
         List<String> results = new ArrayList<>();
         List<Thread> tasks = new ArrayList<>();
         try {
-            hdfsTool = new HdfsTool(splitPackageBean.getHadoop_conf(), new HdfsBean());
-            fileUtil.setReader(hdfsTool.openFile(splitPackageBean.getHdfs_file_path()));
+            fileUtil.setReader(hdfsTool.openFile(hdfs_file_path));
             int max_line = Integer.valueOf(splitPackageBean.getMax_line());
             FileResult<String> fileResult = new FileResult<String>() {
                 int cnt = 0;
@@ -89,30 +106,33 @@ public class SplitPackageJob extends BaseJob {
             //等待完成
             waitFor(tasks);
             timeCostUtil.end();
-            logger.info("===========The file processing is completed, as follows，read：{}，submit：{}，cost：{}",
+            logger.info("==========={} The file processing is completed, as follows，read：{}，submit：{}，cost：{}",
+                    hdfs_file_path,
                     fileResult.getCount("read"),
                     fileResult.getCount("submit"),
                     timeCostUtil.getCost());
             //================================
             //上传
+            ThreadTool threadTool = new ThreadTool(splitPackageBean.getSftp_parallel_num());//并发控制
             timeCostUtil.start();
+            //添加任务
             for (String fileName : results) {
                 String local = splitPackageBean.getLocal_bak_path() + fileName;
                 String remote = splitPackageBean.getRemote_path() + fileName;
-                SftpUtil.upload(sftpConnection, local, remote);
+                threadTool.addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        SftpUtil.upload(sftpConnection, local, remote);
+                    }
+                });
             }
+            //启动任务
+            threadTool.startTask();
             timeCostUtil.end();
-            logger.info("===========Upload succeeded，fileSize：{}，cost：{}", results.size(), timeCostUtil.getCost());
+            logger.info("==========={} Upload succeeded，fileNum：{}，cost：{}", hdfs_file_path, results.size(), timeCostUtil.getCost());
         } finally {
             fileUtil.closeRead();
         }
-    }
-
-    @Override
-    public void release() throws Throwable {
-        if (sftpConnection != null) SftpUtil.closeSftpConnection(sftpConnection);
-        if (zookeeperTools != null) zookeeperTools.close();
-        if (hdfsTool != null) hdfsTool.closeFileSystem();
     }
 
     private Thread submit(List<String> results, List<String> messages) {
@@ -175,7 +195,7 @@ public class SplitPackageJob extends BaseJob {
                 throw new RuntimeException("无法创建文件:" + localBakFile + ".ok", e);
             }
             timeCostUtil.end();
-            logger.info("成功新建本地备份文件：{}，耗时：{}", localBakFile, timeCostUtil.getCost());
+            logger.debug("成功新建本地备份文件：{}，耗时：{}", localBakFile, timeCostUtil.getCost());
             results.add(fileName);
             return fileName;
         }
