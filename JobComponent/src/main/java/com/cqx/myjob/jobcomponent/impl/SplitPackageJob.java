@@ -55,13 +55,26 @@ public class SplitPackageJob extends BaseJob {
 
     @Override
     public void run() throws Throwable {
+        //HDFS工具
         hdfsTool = new HdfsTool(splitPackageBean.getHadoop_conf(), new HdfsBean());
+        //处理4并发
+        ThreadTool threadTool = new ThreadTool(4, 200);
         //扫描
         for (String path : hdfsTool.lsPath(splitPackageBean.getHdfs_file_path())) {
             logger.info("scan hdfs：{}", path);
-            //分割打包上传
-            splitAndSend(path);
+            threadTool.addTask(new Runnable() {
+                @Override
+                public void run() {
+                    //分割打包上传
+                    try {
+                        splitAndSend(path);
+                    } catch (Throwable throwable) {
+                        logger.error("【分割打包上传异常】", throwable);
+                    }
+                }
+            });
         }
+        threadTool.startTask();
     }
 
     @Override
@@ -113,13 +126,13 @@ public class SplitPackageJob extends BaseJob {
                     timeCostUtil.getCost());
             //================================
             //上传
-            ThreadTool threadTool = new ThreadTool(splitPackageBean.getSftp_parallel_num());//并发控制
+            ThreadTool uploadTool = new ThreadTool(splitPackageBean.getSftp_parallel_num());//并发控制
             timeCostUtil.start();
             //添加任务
             for (String fileName : results) {
                 String local = splitPackageBean.getLocal_bak_path() + fileName;
                 String remote = splitPackageBean.getRemote_path() + fileName;
-                threadTool.addTask(new Runnable() {
+                uploadTool.addTask(new Runnable() {
                     @Override
                     public void run() {
                         SftpUtil.upload(sftpConnection, local, remote);
@@ -127,7 +140,7 @@ public class SplitPackageJob extends BaseJob {
                 });
             }
             //启动任务
-            threadTool.startTask();
+            uploadTool.startTask();
             timeCostUtil.end();
             logger.info("==========={} Upload succeeded，fileNum：{}，cost：{}", hdfs_file_path, results.size(), timeCostUtil.getCost());
         } finally {
