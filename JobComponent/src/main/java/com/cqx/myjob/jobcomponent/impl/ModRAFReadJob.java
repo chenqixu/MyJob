@@ -43,7 +43,7 @@ public class ModRAFReadJob extends BaseJob {
         } finally {
             fileUtil.closeRead();
         }
-        timeCostUtil.end();
+        timeCostUtil.stop();
         logger.info("==步骤【0】：cacheMap大小：{}，处理耗时：{}", cacheMap.size(), timeCostUtil.getCost());
         logger.info("==步骤【0】：完成初始化参数");
     }

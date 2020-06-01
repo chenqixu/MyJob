@@ -43,7 +43,7 @@ public class TestJob extends BaseJob {
             };
             timeCostUtil.start();
             fileUtil.read(fileCount);
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("read：{}，cost：{}", fileCount.getCount("read"), timeCostUtil.getCost());
         } finally {
             if (hdfsTool != null) hdfsTool.closeFileSystem();

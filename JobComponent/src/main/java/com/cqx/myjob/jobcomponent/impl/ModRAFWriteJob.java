@@ -84,7 +84,7 @@ public class ModRAFWriteJob extends BaseJob {
             readHdfs(path, fileCount, threadNum);
             cnt = fileCount.getCount("read");
             tmp_all_cnt += cnt;
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==步骤【1】：处理文件：{}，处理记录数：{}，处理耗时：{}", path, cnt, timeCostUtil.getCost());
         }
         final long all_cnt = tmp_all_cnt;
@@ -95,7 +95,7 @@ public class ModRAFWriteJob extends BaseJob {
         for (MyRandomAccessFile myRandomAccessFile : myRandomAccessFileList) {
             myRandomAccessFile.write((all_cnt + 1) * 15, NULL_VALUE);
         }
-        timeCostUtil.end();
+        timeCostUtil.stop();
         logger.info("==步骤【2】：造空的raf：{}，总耗时：{}",
                 modRAFWriteBean.getLocal_raf_path(), timeCostUtil.getCost());
         //##########################################################
@@ -111,7 +111,7 @@ public class ModRAFWriteJob extends BaseJob {
             long raf_cnt = fileCount.getCount("raf_cnt");
             long map_cnt = fileCount.getCount("map_cnt");
             map_file_cnt += map_cnt;
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==步骤【3】：处理文件：{}，mod：{}，raf处理记录数：{}，map处理记录数：{}，处理耗时：{}",
                     path, all_cnt, raf_cnt, map_cnt, timeCostUtil.getCost());
         }
@@ -138,7 +138,7 @@ public class ModRAFWriteJob extends BaseJob {
             FileUtil.del(modRAFWriteBean.getLocal_map_read_path());
             //把写map缓存文件重命名为读取map缓存文件
             FileUtil.rename(modRAFWriteBean.getLocal_map_write_path(), modRAFWriteBean.getLocal_map_read_path());
-            timeCostUtil.end();
+            timeCostUtil.stop();
             //索引数据：raf文件名 | mod
             indexList.add(myRandomAccessFileList.get(i + 1).getFileName() + SP + last_mod);
             logger.info("==步骤【4】：从本地文件读取map缓存，再进一步转换，记录的raf文件：{}，mod：{}，raf处理记录数：{}，map处理记录数：{}，处理耗时：{}",
@@ -147,7 +147,7 @@ public class ModRAFWriteJob extends BaseJob {
         //索引数据写入索引文件
         timeCostUtil.start();
         writeIndexFile(indexList);
-        timeCostUtil.end();
+        timeCostUtil.stop();
         logger.info("==步骤【5】：索引数据写入索引文件，文件名：{}，处理耗时：{}", modRAFWriteBean.getLocal_index_path(), timeCostUtil.getCost());
     }
 

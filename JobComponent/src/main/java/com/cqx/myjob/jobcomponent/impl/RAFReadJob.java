@@ -81,7 +81,7 @@ public class RAFReadJob extends BaseJob {
                 String imsi = readMap.get(msisdn);
                 logger.debug("==步骤【1】：Map，msisdn：{}，imsi：{}", msisdn, imsi);
             }
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==步骤【1】：Map，处理耗时：{}", timeCostUtil.getCost());
             //开始测试RAF
             timeCostUtil.start();
@@ -94,7 +94,7 @@ public class RAFReadJob extends BaseJob {
                 String imsi = modRAFRead.getValue(msisdn);
                 logger.debug("==步骤【1】：RAF，msisdn：{}，imsi：{}", msisdn, imsi);
             }
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==步骤【1】：RAF，处理耗时：{}", timeCostUtil.getCost());
 //            //质量比较
 //            int fail_cnt = 0;

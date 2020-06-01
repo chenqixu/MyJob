@@ -76,7 +76,7 @@ public class ModRAFRead {
         } finally {
             fileUtil.closeRead();
         }
-        timeCostUtil.end();
+        timeCostUtil.stop();
         logger.info("==索引初始化：读取文件：{}，处理耗时：{}", filename, timeCostUtil.getCost());
         return map;
     }

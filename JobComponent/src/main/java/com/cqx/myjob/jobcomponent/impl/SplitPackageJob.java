@@ -118,7 +118,7 @@ public class SplitPackageJob extends BaseJob {
             }
             //等待完成
             waitFor(tasks);
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==========={} The file processing is completed, as follows，read：{}，submit：{}，cost：{}",
                     hdfs_file_path,
                     fileResult.getCount("read"),
@@ -141,7 +141,7 @@ public class SplitPackageJob extends BaseJob {
             }
             //启动任务
             uploadTool.startTask();
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==========={} Upload succeeded，fileNum：{}，cost：{}", hdfs_file_path, results.size(), timeCostUtil.getCost());
         } finally {
             fileUtil.closeRead();
@@ -207,7 +207,7 @@ public class SplitPackageJob extends BaseJob {
             } catch (Exception e) {
                 throw new RuntimeException("无法创建文件:" + localBakFile + ".ok", e);
             }
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.debug("成功新建本地备份文件：{}，耗时：{}", localBakFile, timeCostUtil.getCost());
             results.add(fileName);
             return fileName;

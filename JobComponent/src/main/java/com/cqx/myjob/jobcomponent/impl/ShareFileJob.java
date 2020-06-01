@@ -68,7 +68,7 @@ public class ShareFileJob extends BaseJob {
                     if (is != null) is.close();
                 }
             }
-            timeCostUtil.end();
+            timeCostUtil.stop();
             logger.info("==步骤【1】：处理文件：{}，处理记录数：{}，处理耗时：{}", path, cnt, timeCostUtil.getCost());
             //只处理第一个文件
             break;

@@ -39,7 +39,7 @@ public class InitRAFJob extends BaseJob {
 //        }
         long pos = (initRAFBean.getEnd_key() + 1) * 15;
         myRandomAccessFile.write(pos, "000000000000000");
-        timeCostUtil.end();
+        timeCostUtil.stop();
         logger.info("==步骤【1】：处理文件：{}，处理记录数：{}，处理耗时：{}", initRAFBean.getPath(), pos, timeCostUtil.getCost());
     }
 
