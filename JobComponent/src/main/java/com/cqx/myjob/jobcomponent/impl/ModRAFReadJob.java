@@ -1,6 +1,7 @@
 package com.cqx.myjob.jobcomponent.impl;
 
 import com.cqx.common.utils.file.FileUtil;
+import com.cqx.common.utils.file.IFileRead;
 import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.system.TimeCostUtil;
 import com.cqx.myjob.jobcomponent.BaseJob;
@@ -8,6 +9,7 @@ import com.cqx.myjob.jobcomponent.bean.ModRAFReadBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +37,17 @@ public class ModRAFReadJob extends BaseJob {
         FileUtil fileUtil = new FileUtil();
         try {
             fileUtil.getFile(modRAFReadBean.getLocal_map_path(), "UTF-8");
-            fileUtil.read(s -> {
-                //切割字符串，存入map
-                String[] arr = s.split("\\|", -1);
-                cacheMap.put(arr[0], arr[1]);
+            fileUtil.read(new IFileRead() {
+                @Override
+                public void run(String content) throws IOException {
+                    //切割字符串，存入map
+                    String[] arr = content.split("\\|", -1);
+                    cacheMap.put(arr[0], arr[1]);
+                }
+
+                @Override
+                public void tearDown() throws IOException {
+                }
             });
         } finally {
             fileUtil.closeRead();

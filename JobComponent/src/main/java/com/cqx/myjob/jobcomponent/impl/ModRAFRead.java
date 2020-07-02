@@ -1,6 +1,7 @@
 package com.cqx.myjob.jobcomponent.impl;
 
 import com.cqx.common.utils.file.FileUtil;
+import com.cqx.common.utils.file.IFileRead;
 import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.system.TimeCostUtil;
 import com.cqx.myjob.jobcomponent.bean.RAFReadBean;
@@ -68,10 +69,17 @@ public class ModRAFRead {
         }
         try {
             fileUtil.getFile(filename, "UTF-8");
-            fileUtil.read(s -> {
-                //切割字符串，存入map
-                String[] arr = s.split("\\|", -1);
-                map.put(arr[0], arr[1]);
+            fileUtil.read(new IFileRead() {
+                @Override
+                public void run(String content) throws IOException {
+                    //切割字符串，存入map
+                    String[] arr = content.split("\\|", -1);
+                    map.put(arr[0], arr[1]);
+                }
+
+                @Override
+                public void tearDown() throws IOException {
+                }
             });
         } finally {
             fileUtil.closeRead();
