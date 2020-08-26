@@ -1,7 +1,7 @@
 package com.cqx.myjob.jobcomponent.impl;
 
 import com.cqx.common.utils.mapreduce.JobBuilder;
-import com.cqx.myjob.jobcomponent.BaseJob;
+import com.cqx.myjob.jobcomponent.base.BaseJob;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;

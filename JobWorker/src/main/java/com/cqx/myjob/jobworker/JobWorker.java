@@ -1,9 +1,9 @@
 package com.cqx.myjob.jobworker;
 
 import com.alibaba.fastjson.JSON;
-import com.cqx.myjob.jobcomponent.IJob;
+import com.cqx.myjob.jobcomponent.base.IJob;
 import com.cqx.myjob.jobcomponent.bean.JobBean;
-import com.cqx.myjob.jobcomponent.util.ParamFormat;
+import com.cqx.myjob.jobcomponent.utils.ParamFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

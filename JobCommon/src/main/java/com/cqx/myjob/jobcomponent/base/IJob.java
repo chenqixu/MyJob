@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobcomponent;
+package com.cqx.myjob.jobcomponent.base;
 
 import java.util.Map;
 

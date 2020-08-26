@@ -10,7 +10,7 @@ import com.cqx.common.utils.sftp.SftpUtil;
 import com.cqx.common.utils.system.TimeCostUtil;
 import com.cqx.common.utils.thread.ThreadTool;
 import com.cqx.common.utils.zookeeper.ZookeeperTools;
-import com.cqx.myjob.jobcomponent.BaseJob;
+import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.SplitPackageBean;
 import com.cqx.myjob.jobcomponent.util.FileNameFormat;
 import com.cqx.myjob.jobcomponent.util.GZMd5MemoryCalculator;

@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobclient;
+package com.cqx.myjob.jobclient.http;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;

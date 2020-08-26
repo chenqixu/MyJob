@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobcomponent;
+package com.cqx.myjob.jobcomponent.base;
 
 import com.cqx.common.bean.javabean.BaseBean;
 import com.cqx.common.utils.param.ParamUtil;

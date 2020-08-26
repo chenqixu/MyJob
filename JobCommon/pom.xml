@@ -9,25 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>JobComponent</artifactId>
+    <artifactId>JobCommon</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.cqx</groupId>
-            <artifactId>JobClient</artifactId>
+            <artifactId>TestCommon</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

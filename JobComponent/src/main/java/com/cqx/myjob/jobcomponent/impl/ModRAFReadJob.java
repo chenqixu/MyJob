@@ -4,7 +4,7 @@ import com.cqx.common.utils.file.FileUtil;
 import com.cqx.common.utils.file.IFileRead;
 import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.system.TimeCostUtil;
-import com.cqx.myjob.jobcomponent.BaseJob;
+import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.ModRAFReadBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

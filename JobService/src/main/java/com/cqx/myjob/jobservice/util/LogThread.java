@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobservice.task;
+package com.cqx.myjob.jobservice.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,9 +7,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class LogThread extends Thread {
-
     private static final String separator = System.getProperty("line.separator");
     private static final String file_encoding = System.getProperty("file.encoding");
     private static Logger logger = LoggerFactory.getLogger(LogThread.class);
@@ -17,6 +18,7 @@ public class LogThread extends Thread {
     private StringBuffer threadlog = new StringBuffer();
     private String type;
     private boolean isNeedPrintLog;
+    private BlockingQueue<String> logQueue = new LinkedBlockingQueue<>();
 
     public LogThread(InputStream is, String type) {
         this(is, type, true);
@@ -38,13 +40,13 @@ public class LogThread extends Thread {
             while ((line = br.readLine()) != null) {
                 if (isNeedPrintLog) {
                     if (type.equals("err")) {
-                        logger.info("##错误日志##" + line);
-                        threadlog.append(line).append(separator);
+                        logger.error(line);
                     } else {
-                        logger.info("##内容##" + line);
-                        threadlog.append(line).append(separator);
+                        logger.info(line);
                     }
                 }
+                threadlog.append(line).append(separator);
+                logQueue.add(line);
             }
         } catch (IOException ioe) {
             threadlog.append(ioe.getMessage()).append(separator);
@@ -69,7 +71,11 @@ public class LogThread extends Thread {
         }
     }
 
-    public StringBuffer getThreadloglog() {
+    StringBuffer getThreadloglog() {
         return threadlog;
+    }
+
+    BlockingQueue<String> getLogQueue() {
+        return logQueue;
     }
 }

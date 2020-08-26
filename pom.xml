@@ -9,6 +9,7 @@
         <module>JobWorker</module>
         <module>JobClient</module>
         <module>JobComponent</module>
+        <module>JobCommon</module>
     </modules>
     <packaging>pom</packaging>
 

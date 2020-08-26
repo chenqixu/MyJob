@@ -1,25 +1,14 @@
-package com.cqx.myjob.jobclient;
+package com.cqx.myjob.jobcomponent.bean;
 
-import com.cqx.myjob.jobcomponent.bean.JobBean;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpClientTest {
-
-    private HttpClient httpClient;
-    private String url;
-
-    @Before
-    public void setUp() throws Exception {
-        httpClient = new HttpClient();
-        url = "http://10.1.8.203:10091/jobservice/job/submit/";
-    }
+public class JobBeanTest {
 
     @Test
-    public void doGet() {
+    public void do1() {
         JobBean jobBean = new JobBean();
         jobBean.setJob_name("ShareFileJob");
         jobBean.setJob_class("com.cqx.myjob.jobcomponent.impl.ShareFileJob");
@@ -33,7 +22,7 @@ public class HttpClientTest {
     }
 
     @Test
-    public void doPost() {
+    public void do2() {
         JobBean jobBean = new JobBean();
 
         //10050
@@ -144,7 +133,7 @@ public class HttpClientTest {
     }
 
     @Test
-    public void doPut() {
+    public void do3() {
         String msisdn = "1064767893910";
         long all_cnt = 50979751;
         long mod = Long.valueOf(msisdn) % all_cnt;

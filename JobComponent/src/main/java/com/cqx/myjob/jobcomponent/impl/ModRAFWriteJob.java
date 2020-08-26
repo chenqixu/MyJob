@@ -7,7 +7,7 @@ import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.hdfs.HdfsBean;
 import com.cqx.common.utils.hdfs.HdfsTool;
 import com.cqx.common.utils.system.TimeCostUtil;
-import com.cqx.myjob.jobcomponent.BaseJob;
+import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.ModRAFWriteBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

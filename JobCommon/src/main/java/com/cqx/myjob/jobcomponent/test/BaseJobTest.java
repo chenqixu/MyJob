@@ -1,7 +1,7 @@
 package com.cqx.myjob.jobcomponent.test;
 
-import com.cqx.myjob.jobcomponent.BaseJob;
-import com.cqx.myjob.jobcomponent.util.ParamFormat;
+import com.cqx.myjob.jobcomponent.base.BaseJob;
+import com.cqx.myjob.jobcomponent.utils.ParamFormat;
 
 import java.util.Map;
 

@@ -2,7 +2,7 @@ package com.cqx.myjob.jobcomponent.impl;
 
 import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.system.TimeCostUtil;
-import com.cqx.myjob.jobcomponent.BaseJob;
+import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.InitRAFBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

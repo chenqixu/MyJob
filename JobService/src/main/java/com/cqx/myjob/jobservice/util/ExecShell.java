@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobservice.task;
+package com.cqx.myjob.jobservice.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,46 +29,6 @@ public class ExecShell {
         return new ExecShell(isNeedPrintLog, job_id);
     }
 
-    public int run(String cmd) {
-        int resultcode = -1;
-        try {
-            Runtime runtime = Runtime.getRuntime();
-            logger.info("cmd：{}", cmd);
-            process = runtime.exec(cmd);
-            runLog();
-            resultcode = process.waitFor();
-            logger.info("cmd：{}，resultcode：{}", cmd, resultcode);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            release();
-        }
-        return resultcode;
-    }
-
-    public int runs(String cmd) {
-        int resultcode = -1;
-        try {
-            Runtime runtime = Runtime.getRuntime();
-            logger.info("cmd：{}", cmd);
-            String[] cmdarr = cmd.split(";", -1);
-            for (String _cmd : cmdarr) {
-                if (_cmd != null && _cmd.length() > 0) {
-                    process = runtime.exec(_cmd);
-                    runLog();
-                    resultcode = process.waitFor();
-                    logger.info("cmd：{}，resultcode：{}", _cmd, resultcode);
-                    if (resultcode != 0) break;
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            release();
-        }
-        return resultcode;
-    }
-
     public int run(String[] cmd, String path) {
         int resultcode = -1;
         try {
@@ -76,7 +36,7 @@ public class ExecShell {
             logger.info("job_id【{}】，status【start】，cmd：{}", job_id, Arrays.asList(cmd));
             process = runtime.exec(cmd, null, new File(path));
             runLog();
-            resultcode = process.waitFor();
+            resultcode = waitFor();
             logger.info("job_id【{}】，status【end】，resultcode：{}", job_id, resultcode);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -94,16 +54,26 @@ public class ExecShell {
         lterr = new LogThread(process.getErrorStream(), "err", isNeedPrintLog);
         ltinfo.start();
         lterr.start();
-        try {
-            ltinfo.join();
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
-        }
-        try {
-            lterr.join();
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
-        }
+    }
+
+    /**
+     * 等待处理完成
+     */
+    private int waitFor() throws InterruptedException {
+        // 资源释放前必须等待日志线程结束
+        if (ltinfo != null)
+            try {
+                ltinfo.join();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            }
+        if (lterr != null)
+            try {
+                lterr.join();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            }
+        return process.waitFor();
     }
 
     public void writeSuccessLog(StringBuilder sb) {
@@ -117,7 +87,7 @@ public class ExecShell {
     /**
      * 资源释放
      */
-    public void release() {
+    private void release() {
         if (process != null) {
             logger.info("job_id【{}】，status【release】，process.destroy.", job_id);
             process.destroy();

@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobcomponent.util;
+package com.cqx.myjob.jobcomponent.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
