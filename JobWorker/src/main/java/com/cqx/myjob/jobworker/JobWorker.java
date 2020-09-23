@@ -1,6 +1,7 @@
 package com.cqx.myjob.jobworker;
 
 import com.alibaba.fastjson.JSON;
+import com.cqx.common.utils.system.TimeCostUtil;
 import com.cqx.myjob.jobcomponent.base.IJob;
 import com.cqx.myjob.jobcomponent.bean.JobBean;
 import com.cqx.myjob.jobcomponent.utils.ParamFormat;
@@ -27,6 +28,8 @@ public class JobWorker {
 //        System.setProperty("job_id", "10052");
         Logger logger = LoggerFactory.getLogger(JobWorker.class);
         if (args.length == 1) {
+            TimeCostUtil timeCostUtil = new TimeCostUtil();
+            timeCostUtil.start();
             JobBean jobBean = null;
             IJob iJob = null;
             try {
@@ -71,6 +74,8 @@ public class JobWorker {
                         logger.info(String.format("==%s【资源释放】", jobBean.getJob_name()));
                         //资源释放
                         iJob.release();
+                        timeCostUtil.stop();
+                        logger.info(String.format("==%s【运行总时长】%s", jobBean.getJob_name(), timeCostUtil.getCost()));
                     } catch (Throwable e) {
                         logger.error(String.format("==%s【运行异常】，异常信息：%s",
                                 jobBean.getJob_name(), e.getMessage()), e);

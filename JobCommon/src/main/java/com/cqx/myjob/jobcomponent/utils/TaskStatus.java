@@ -1,4 +1,4 @@
-package com.cqx.myjob.jobservice.task;
+package com.cqx.myjob.jobcomponent.utils;
 
 /**
  * TaskStatus
@@ -19,5 +19,15 @@ public enum TaskStatus {
         else if (ret == -98) return RUNNING;
         else if (ret == 0) return SUCCESS;
         else return FAIL;
+    }
+
+    public static boolean isComplete(int ret) {
+        switch (TaskStatus.getStatus(ret)) {
+            case SUCCESS:
+            case FAIL:
+                return true;
+            default:
+                return false;
+        }
     }
 }

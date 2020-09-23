@@ -1,7 +1,7 @@
 package com.cqx.myjob.jobservice.util;
 
 import com.cqx.myjob.jobcomponent.bean.JobBean;
-import com.cqx.myjob.jobservice.task.TaskStatus;
+import com.cqx.myjob.jobcomponent.utils.TaskStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +95,7 @@ public class CallJobUtil {
             case FAIL:
                 jobThreadMap.remove(job_id);
                 logQueueMap.remove(job_id);
-                logger.info("释放已完成任务：{}", job_id);
+                logger.info("释放已完成任务：{}，ret：{}", job_id, ret);
                 break;
             default:
                 break;

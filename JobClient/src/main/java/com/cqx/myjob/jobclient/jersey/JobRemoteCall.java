@@ -5,6 +5,7 @@ import com.cqx.common.utils.file.FileUtil;
 import com.cqx.common.utils.system.SleepUtil;
 import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.JobBean;
+import com.cqx.myjob.jobcomponent.utils.TaskStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +77,8 @@ public class JobRemoteCall {
         clientFactory.postJSON(serverUrl + "submit_jobBean",
                 JSON.toJSONString(jobBean));
         //获取日志
-        while (clientFactory.get(serverUrl + "get_job_status/" + job_id, Integer.class) != 0) {
+        int ret;
+        while (!TaskStatus.isComplete(ret = clientFactory.get(serverUrl + "get_job_status/" + job_id, Integer.class))) {
             List logs = clientFactory.get(serverUrl + "get_job_log/" + job_id, List.class);
             for (Object log : logs) {
                 logger.info("log：{}", log);
@@ -90,5 +92,8 @@ public class JobRemoteCall {
         }
         //最后释放任务
         clientFactory.get(serverUrl + "release_job/" + job_id);
+        if (ret == 137) {
+            logger.warn("log：任务被异常kill！");
+        }
     }
 }

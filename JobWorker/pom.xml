@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.cqx</groupId>
-            <artifactId>JobComponent</artifactId>
+            <artifactId>JobCommon</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
