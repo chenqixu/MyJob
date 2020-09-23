@@ -17,6 +17,13 @@
             <artifactId>JobClient</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <!-- rocksdb -->
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+            <version>6.10.2</version>
+        </dependency>
     </dependencies>
 
     <build>
