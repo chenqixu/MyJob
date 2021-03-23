@@ -2,7 +2,7 @@ package com.cqx.myjob.jobcomponent.impl;
 
 import com.cqx.common.utils.hdfs.HdfsBean;
 import com.cqx.common.utils.hdfs.HdfsTool;
-import com.cqx.common.utils.rocksdb.RocksDBUtil;
+import com.cqx.common.utils.localcache.rocksdb.RocksDBUtil;
 import com.cqx.common.utils.system.TimeCostUtil;
 import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.RocksDBCacheBean;
