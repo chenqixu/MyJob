@@ -1,9 +1,9 @@
 package com.cqx.myjob.jobcomponent.impl;
 
+import com.cqx.common.utils.file.BaseRandomAccessFile;
 import com.cqx.common.utils.file.FileCount;
 import com.cqx.common.utils.file.FileUtil;
 import com.cqx.common.utils.file.IFileRead;
-import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.hdfs.HdfsBean;
 import com.cqx.common.utils.hdfs.HdfsTool;
 import com.cqx.common.utils.system.TimeCostUtil;
@@ -34,7 +34,7 @@ public class ModRAFWriteJob extends BaseJob {
     private ModRAFWriteBean modRAFWriteBean;
     private HdfsTool hdfsTool;
     private int threadNum = 0;//并行
-    private List<MyRandomAccessFile> myRandomAccessFileList;
+    private List<BaseRandomAccessFile> myRandomAccessFileList;
 
     @Override
     public void init(Map<String, String> param) throws Throwable {
@@ -57,7 +57,7 @@ public class ModRAFWriteJob extends BaseJob {
         //初始化本地映像文件，加1是因为HDFS文件也需要raf，但不算在map raf中
         myRandomAccessFileList = new ArrayList<>();
         for (int i = 0; i < modRAFWriteBean.getDeal_cnt() + 1; i++) {
-            myRandomAccessFileList.add(new MyRandomAccessFile(modRAFWriteBean.getLocal_raf_path() + i));
+            myRandomAccessFileList.add(new BaseRandomAccessFile(modRAFWriteBean.getLocal_raf_path() + i));
         }
         logger.info("==步骤【0】：完成初始化参数");
     }
@@ -92,7 +92,7 @@ public class ModRAFWriteJob extends BaseJob {
         //##########################################################
         //造空的raf
         timeCostUtil.start();
-        for (MyRandomAccessFile myRandomAccessFile : myRandomAccessFileList) {
+        for (BaseRandomAccessFile myRandomAccessFile : myRandomAccessFileList) {
             myRandomAccessFile.write((all_cnt + 1) * 15, NULL_VALUE);
         }
         timeCostUtil.stop();
@@ -158,7 +158,7 @@ public class ModRAFWriteJob extends BaseJob {
             hdfsTool.closeFileSystem();
         }
         if (myRandomAccessFileList != null) {
-            for (MyRandomAccessFile myRandomAccessFile : myRandomAccessFileList) {
+            for (BaseRandomAccessFile myRandomAccessFile : myRandomAccessFileList) {
                 myRandomAccessFile.close();
             }
         }
@@ -212,7 +212,7 @@ public class ModRAFWriteJob extends BaseJob {
      * @param fileUtil
      * @return
      */
-    private FileCount dealContent(long mod_cnt, MyRandomAccessFile myRandomAccessFile, FileUtil fileUtil) {
+    private FileCount dealContent(long mod_cnt, BaseRandomAccessFile myRandomAccessFile, FileUtil fileUtil) {
         return new FileCount() {
             @Override
             public void run(String str) throws IOException {

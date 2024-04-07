@@ -1,8 +1,8 @@
 package com.cqx.myjob.jobcomponent.impl;
 
+import com.cqx.common.utils.file.BaseRandomAccessFile;
 import com.cqx.common.utils.file.FileUtil;
 import com.cqx.common.utils.file.IFileRead;
-import com.cqx.common.utils.file.MyRandomAccessFile;
 import com.cqx.common.utils.system.TimeCostUtil;
 import com.cqx.myjob.jobcomponent.base.BaseJob;
 import com.cqx.myjob.jobcomponent.bean.ModRAFReadBean;
@@ -22,14 +22,14 @@ public class ModRAFReadJob extends BaseJob {
 
     private static final Logger logger = LoggerFactory.getLogger(ModRAFReadJob.class);
     private ModRAFReadBean modRAFReadBean;
-    private MyRandomAccessFile myRandomAccessFile;
+    private BaseRandomAccessFile myRandomAccessFile;
     private Map<String, String> cacheMap;
 
     @Override
     public void init(Map<String, String> param) throws Throwable {
         logger.info("==步骤【开始】：开始初始化参数");
         modRAFReadBean = setValueByMap(param, ModRAFReadBean.class, logger);
-        myRandomAccessFile = new MyRandomAccessFile(modRAFReadBean.getLocal_raf_path());
+        myRandomAccessFile = new BaseRandomAccessFile(modRAFReadBean.getLocal_raf_path());
         cacheMap = new HashMap<>();
         //初始化本地map
         TimeCostUtil timeCostUtil = new TimeCostUtil();
@@ -43,6 +43,10 @@ public class ModRAFReadJob extends BaseJob {
                     //切割字符串，存入map
                     String[] arr = content.split("\\|", -1);
                     cacheMap.put(arr[0], arr[1]);
+                }
+
+                @Override
+                public void run(byte[] content) throws IOException {
                 }
 
                 @Override
